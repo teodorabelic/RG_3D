@@ -1,0 +1,46 @@
+﻿#version 330 core
+
+in vec4 vColor;
+in vec2 vTex;
+in vec3 vNormal;
+in vec3 vFragPos;
+
+out vec4 FragColor;
+
+uniform sampler2D uTex;
+uniform bool useTex;
+uniform bool transparent;
+uniform bool acOn;
+
+// svetlo (jedno je dovoljno po specifikaciji)
+uniform vec3 lightPos = vec3(2.0, 4.0, 2.0);
+uniform vec3 lightColor = vec3(1.0, 1.0, 1.0);
+
+uniform vec4 overrideColor; // ako je a > 0, koristi ovu boju
+
+void main()
+{
+    vec3 norm = normalize(vNormal);
+    vec3 lightDir = normalize(lightPos - vFragPos);
+
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+
+    vec4 baseColor = vColor;
+    if (useTex)
+        baseColor = texture(uTex, vTex);
+
+    vec3 finalColor = baseColor.rgb * diffuse;
+
+    // 🔴 emissive lampica kad klima radi
+    if (acOn && baseColor.r > 0.8 && baseColor.g < 0.3 && baseColor.b < 0.3)
+    {
+        finalColor += vec3(1.0, 0.0, 0.0);
+    }
+
+    float alpha = baseColor.a;
+    if (transparent)
+        alpha *= 0.5;
+
+    FragColor = vec4(finalColor, alpha);
+}
