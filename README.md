@@ -8,7 +8,7 @@ The project demonstrates real-time 3D rendering, camera controls, object interac
 
 ## Preview
 
-![Air Conditioner 3D Simulation](screenshots/air-conditioner-3d.png)
+![Air Conditioner 3D Simulation](screenshots/air-conditioner.png)
 
 ## Features
 
